@@ -2,6 +2,7 @@ package com.brandon.todolist.database;
 
 import com.brandon.todolist.dao.LoginDAO;
 import com.brandon.todolist.model.User;
+import jakarta.servlet.http.HttpSession;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

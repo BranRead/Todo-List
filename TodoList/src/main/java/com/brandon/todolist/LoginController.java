@@ -34,11 +34,16 @@ public class LoginController extends HttpServlet {
 
     private void select(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
         User user = loginDAOImp.select(request.getParameter("username"), request.getParameter("password"));
-        request.setAttribute("user", user);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
-        dispatcher.include(request, response);
-        dispatcher.forward(request, response);
+        if(user != null) {
+            request.setAttribute("user", user);
+            HttpSession session = request.getSession();
+            session.setAttribute("user", user);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/toDo.jsp");
+            dispatcher.include(request, response);
+            dispatcher.forward(request, response);
 
-        response.sendRedirect("/index.jsp");
+            response.sendRedirect("/toDo.jsp");
+        }
+
     }
 }
