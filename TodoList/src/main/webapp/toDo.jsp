@@ -11,15 +11,9 @@
 <head>
     <title>To Do List</title>
 </head>
-<%--<jsp:useBean id="user" scope="request"--%>
-<%--             class="com.brandon.todolist.model.User"/>--%>
+
 <body>
-    <h1>You have logged in!</h1>
-
-<%--    <p>Name of person is: <c:out value="${user.getfName()}"/></p>--%>
-
     <button><a href="addNewTask.jsp">Add task</a></button>
-
     <table>
         <tr>
             <th>Task</th>
@@ -30,9 +24,17 @@
             <tr>
                 <td><c:out value="${item.getName()}"/></td>
                 <td><c:out value="${item.getDueDate()}"/></td>
-                <td><c:out value="${item.isDone()}"/></td>
+                <c:choose>
+                    <c:when test="${item.isDone() == true}">
+                        <td>Finished!</td>
+                    </c:when>
+                    <c:otherwise>
+                        <td>Incomplete</td>
+                    </c:otherwise>
+                </c:choose>
+                <td><form action="list"><button type="submit" name="edit" value="${item.getId()}">Edit</button></form></td>
+                <td><form action="list"><button type="submit" name="delete" value="${item.getId()}">Delete</button></form></td>
             </tr>
-
         </c:forEach>
     </table>
 </body>

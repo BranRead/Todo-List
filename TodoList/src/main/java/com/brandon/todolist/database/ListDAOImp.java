@@ -34,6 +34,7 @@ public class ListDAOImp implements ListDAO {
             rs = ps.executeQuery();
             while(rs.next()){
                 ToDoItem toDoItem = new ToDoItem();
+                toDoItem.setId(rs.getInt("id"));
                 toDoItem.setOwnerId(rs.getInt("ownerId"));
                 toDoItem.setName(rs.getString("name"));
                 toDoItem.setDueDate(rs.getDate("dueDate"));

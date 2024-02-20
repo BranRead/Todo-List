@@ -5,7 +5,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.brandon.todolist.dao.LoginDAO;
+import com.brandon.todolist.database.ListDAOImp;
 import com.brandon.todolist.database.LoginDAOImp;
+import com.brandon.todolist.model.ToDoItem;
 import com.brandon.todolist.model.User;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -15,9 +17,11 @@ import jakarta.servlet.annotation.*;
 @WebServlet(name = "loginController", value = "/login")
 public class LoginController extends HttpServlet {
     LoginDAOImp loginDAOImp;
+    ListDAOImp listDAOImp;
 
     public void init() {
         loginDAOImp = new LoginDAOImp();
+        listDAOImp = new ListDAOImp();
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -37,13 +41,14 @@ public class LoginController extends HttpServlet {
         if(user != null) {
             request.setAttribute("user", user);
             HttpSession session = request.getSession();
+            List<ToDoItem> toDoList = listDAOImp.selectAll(user.getId());
             session.setAttribute("user", user);
+            session.setAttribute("list", toDoList);
             RequestDispatcher dispatcher = request.getRequestDispatcher("/toDo.jsp");
             dispatcher.include(request, response);
             dispatcher.forward(request, response);
 
             response.sendRedirect("/toDo.jsp");
         }
-
     }
 }
