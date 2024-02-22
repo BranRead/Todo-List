@@ -13,6 +13,7 @@
 <body>
     <form action="list" method="post">
         <input type="text" name="name" placeholder="Name"/>
+        <textarea name="description"></textarea>
         <input type="date" name="date"/>
         <button name="add" value="${sessionScope.user.getId()}">Add</button>
     </form>

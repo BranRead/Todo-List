@@ -14,11 +14,13 @@
 </head>
 
 <body>
+
     <button><a href="addNewTask.jsp">Add task</a></button>
     <table>
         <tr>
             <th></th>
             <th>Task</th>
+            <th>Description</th>
             <th>When to Complete</th>
         </tr>
         <c:forEach var="item" items="${sessionScope.list}">
@@ -27,20 +29,22 @@
                     <c:when test="${item.isDone() == true}">
                         <td><input type="checkbox" value="${item.getId()}" onClick="toggleDone(${item.getId()}, this)" checked/></td>
                         <td class="crossedOut"><c:out value="${item.getName()}"/></td>
+                        <td class="crossedOut"><c:out value="${item.getDescription()}"/></td>
                         <td class="crossedOut"><c:out value="${item.getDueDate()}"/></td>
                     </c:when>
                     <c:otherwise>
                         <td><input type="checkbox" value="${item.getId()}" onClick="toggleDone(${item.getId()}, this)"/></td>
                         <td><c:out value="${item.getName()}"/></td>
+                        <td><c:out value="${item.getDescription()}"/></td>
                         <td><c:out value="${item.getDueDate()}"/></td>
                     </c:otherwise>
                 </c:choose>
 
-                <td><form action="list" method="post"><button type="submit" name="edit" value="${item.getId()}">Edit</button></form></td>
+                <td><button class="edit" name="edit" value="${item.getId()}" onClick="editTask()">Edit</button></td>
                 <td><form action="list" method="post"><button type="submit" name="delete" value="${item.getId()}">Delete</button></form></td>
             </tr>
         </c:forEach>
     </table>
-<script src="scripts/script.js"></script>
+    <script src="scripts/script.js"></script>
 </body>
 </html>

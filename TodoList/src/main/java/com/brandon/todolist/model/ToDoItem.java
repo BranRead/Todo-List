@@ -5,10 +5,9 @@ import java.util.Date;
 public class ToDoItem {
     private int id;
     private int ownerId;
-
     private String name;
+    private String description;
     private boolean isDone;
-
     private java.sql.Date dueDate;
 
     public ToDoItem(){}
@@ -35,6 +34,14 @@ public class ToDoItem {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public boolean isDone() {

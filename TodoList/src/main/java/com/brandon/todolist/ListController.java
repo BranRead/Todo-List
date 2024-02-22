@@ -25,12 +25,7 @@ public class ListController extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            addTest();
-//            select(request, response);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -55,6 +50,7 @@ public class ListController extends HttpServlet {
             throws SQLException, IOException, ServletException {
         ToDoItem toDoItem = new ToDoItem();
         toDoItem.setName(request.getParameter("name"));
+        toDoItem.setDescription(request.getParameter("description"));
         toDoItem.setDueDate(Date.valueOf(request.getParameter("date")));
         toDoItem.setOwnerId(Integer.parseInt(request.getParameter("add")));
         listDAOImp.addNewTask(toDoItem);
@@ -95,11 +91,6 @@ public class ListController extends HttpServlet {
 //
 //    }
 
-    private void addTest() {
-        ToDoItem toDoItem = new ToDoItem();
-        toDoItem.setName("This worked!!!!");
-        listDAOImp.addNewTask(toDoItem);
-    }
 
 
 }

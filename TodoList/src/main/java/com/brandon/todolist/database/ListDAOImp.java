@@ -15,7 +15,7 @@ import static com.brandon.todolist.database.MySQLConnection.getConnection;
 
 public class ListDAOImp implements ListDAO {
     private static final String SQL_SELECT_ALL = "SELECT * FROM tasks where ownerId = ?";
-    private static final String SQL_INSERT = "INSERT INTO tasks (ownerId, name, dueDate, isDone) VALUES (?,?,?,0)";
+    private static final String SQL_INSERT = "INSERT INTO tasks (ownerId, name, description, dueDate, isDone) VALUES (?,?,?,?,0)";
     private static final String SQL_FINISHED = "UPDATE tasks SET isDone = ? WHERE id = ?";
     private static final String SQL_DELETE = "DELETE FROM tasks WHERE id = ?";
     private Connection jdbcConnection;
@@ -39,6 +39,7 @@ public class ListDAOImp implements ListDAO {
                 toDoItem.setId(rs.getInt("id"));
                 toDoItem.setOwnerId(rs.getInt("ownerId"));
                 toDoItem.setName(rs.getString("name"));
+                toDoItem.setDescription(rs.getString("description"));
                 toDoItem.setDueDate(rs.getDate("dueDate"));
                 toDoItem.setDone(rs.getBoolean("isDone"));
                 toDoList.add(toDoItem);
@@ -61,7 +62,8 @@ public class ListDAOImp implements ListDAO {
             ps = conn.prepareStatement(SQL_INSERT);
             ps.setInt(1, toDoItem.getOwnerId());
             ps.setString(2, toDoItem.getName());
-            ps.setDate(3, toDoItem.getDueDate());
+            ps.setString(3, toDoItem.getDescription());
+            ps.setDate(4, toDoItem.getDueDate());
             ps.executeUpdate();
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
