@@ -1,7 +1,12 @@
-function editTask(){
-    console.log("Worked");
-}
+// function editTask(event){
+//     event.preventDefault();
+//     console.log("Worked");
+// }
 
+
+function test(){
+    console.log("Test test");
+}
 function toggleDone(id, checkbox) {
     console.log(checkbox.checked);
     updateList(id, checkbox.checked).then(()=> {
