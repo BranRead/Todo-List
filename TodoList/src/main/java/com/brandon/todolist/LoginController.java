@@ -1,8 +1,10 @@
 package com.brandon.todolist;
 
 import java.io.*;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.brandon.todolist.dao.LoginDAO;
 import com.brandon.todolist.database.ListDAOImp;
@@ -22,6 +24,14 @@ public class LoginController extends HttpServlet {
     public void init() {
         loginDAOImp = new LoginDAOImp();
         listDAOImp = new ListDAOImp();
+    }
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            update(request, response);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -50,5 +60,25 @@ public class LoginController extends HttpServlet {
 
             response.sendRedirect("/toDo.jsp");
         }
+    }
+
+    private void update(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
+
+        listDAOImp.toggleTaskFinished(Integer.parseInt(request.getParameter("taskId")), Boolean.parseBoolean(request.getParameter("isChecked")));
+
+        Logger logger = Logger.getLogger(getClass().getName());
+        logger.fine(request.getParameter("isChecked"));
+
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        List<ToDoItem> toDoList = listDAOImp.selectAll(user.getId());
+
+        session.setAttribute("list", toDoList);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/toDo.jsp");
+        dispatcher.include(request, response);
+        dispatcher.forward(request, response);
+
+        response.sendRedirect("/toDo.jsp");
+
     }
 }

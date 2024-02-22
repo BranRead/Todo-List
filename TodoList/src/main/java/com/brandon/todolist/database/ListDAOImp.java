@@ -16,6 +16,8 @@ import static com.brandon.todolist.database.MySQLConnection.getConnection;
 public class ListDAOImp implements ListDAO {
     private static final String SQL_SELECT_ALL = "SELECT * FROM tasks where ownerId = ?";
     private static final String SQL_INSERT = "INSERT INTO tasks (ownerId, name, dueDate, isDone) VALUES (?,?,?,0)";
+    private static final String SQL_FINISHED = "UPDATE tasks SET isDone = ? WHERE id = ?";
+    private static final String SQL_DELETE = "DELETE FROM tasks WHERE id = ?";
     private Connection jdbcConnection;
 
 
@@ -54,8 +56,6 @@ public class ListDAOImp implements ListDAO {
     public void addNewTask(ToDoItem toDoItem) {
         Connection conn;
         PreparedStatement ps;
-        ResultSet rs;
-
         try {
             conn = getConnection();
             ps = conn.prepareStatement(SQL_INSERT);
@@ -67,5 +67,37 @@ public class ListDAOImp implements ListDAO {
             System.out.println("Error: " + e.getMessage());
         }
 
+    }
+
+    @Override
+    public void toggleTaskFinished(int id, boolean isChecked) {
+        Connection conn;
+        PreparedStatement ps;
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(SQL_FINISHED);
+            if(isChecked){
+                ps.setInt(1, 1);
+            } else {
+                ps.setInt(1, 0);
+            }
+            ps.setInt(2, id);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public void delete(int id){
+        Connection conn;
+        PreparedStatement ps;
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(SQL_DELETE);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 }

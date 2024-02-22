@@ -14,7 +14,7 @@
     <form action="list" method="post">
         <input type="text" name="name" placeholder="Name"/>
         <input type="date" name="date"/>
-        <button name="userId" value="${sessionScope.user.getId()}">Add</button>
+        <button name="add" value="${sessionScope.user.getId()}">Add</button>
     </form>
 </body>
 </html>

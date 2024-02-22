@@ -16,7 +16,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet(name = "listController", value= "/list")
+@WebServlet("/list")
 public class ListController extends HttpServlet {
     ListDAOImp listDAOImp;
 
@@ -24,10 +24,24 @@ public class ListController extends HttpServlet {
         listDAOImp = new ListDAOImp();
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws IOException, ServletException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) {
         try {
-            add(request, response);
+            addTest();
+//            select(request, response);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        try{
+            if(request.getParameter("add") != null) {
+                add(request, response);
+            }
+            if(request.getParameter("delete") != null) {
+                delete(request, response);
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -37,21 +51,55 @@ public class ListController extends HttpServlet {
 
     }
 
-    private void add(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
+    private void add(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
         ToDoItem toDoItem = new ToDoItem();
         toDoItem.setName(request.getParameter("name"));
         toDoItem.setDueDate(Date.valueOf(request.getParameter("date")));
-        toDoItem.setOwnerId(Integer.parseInt(request.getParameter("userId")));
+        toDoItem.setOwnerId(Integer.parseInt(request.getParameter("add")));
         listDAOImp.addNewTask(toDoItem);
-
-
-        List<ToDoItem> toDoList = listDAOImp.selectAll(Integer.parseInt(request.getParameter("userId")));
-
-
+        List<ToDoItem> toDoList = listDAOImp.selectAll(Integer.parseInt(request.getParameter("add")));
         request.getSession().setAttribute("list", toDoList);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/toDo.jsp");
         dispatcher.include(request, response);
         dispatcher.forward(request, response);
         response.sendRedirect("/toDo.jsp");
     }
+
+    private void delete(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+        listDAOImp.delete(Integer.parseInt(request.getParameter("delete")));
+        User user = (User) request.getSession().getAttribute("user");
+        List<ToDoItem> toDoList = listDAOImp.selectAll(user.getId());
+        request.getSession().setAttribute("list", toDoList);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/toDo.jsp");
+        dispatcher.include(request, response);
+        dispatcher.forward(request, response);
+        response.sendRedirect("/toDo.jsp");
+    }
+
+//    private void select(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
+//
+//
+////            request.setAttribute("user", user);
+//            HttpSession session = request.getSession();
+//            User user = (User) session.getAttribute("user");
+//            List<ToDoItem> toDoList = listDAOImp.selectAll(user.getId());
+////            session.setAttribute("user", user);
+//            session.setAttribute("list", toDoList);
+//            RequestDispatcher dispatcher = request.getRequestDispatcher("/toDo.jsp");
+//            dispatcher.include(request, response);
+//            dispatcher.forward(request, response);
+//
+//            response.sendRedirect("/toDo.jsp");
+//
+//    }
+
+    private void addTest() {
+        ToDoItem toDoItem = new ToDoItem();
+        toDoItem.setName("This worked!!!!");
+        listDAOImp.addNewTask(toDoItem);
+    }
+
+
 }
